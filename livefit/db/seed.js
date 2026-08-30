@@ -30,6 +30,59 @@ async function main() {
   //     （TypeORM 會自動取出它的 id 填進外鍵），寫法範例：
   //      courseRepo.save({ name: '...', user: 教練物件, skill: 技能物件 })
   // ======================================================================
+  const skillRepo = dataSource.getRepository('Skill')
+  const skills = await skillRepo.save([
+    { name: '重訓' },
+    { name: '瑜珈' },
+    { name: '飛輪' },
+  ])
+
+  const userRepo = dataSource.getRepository('User')
+  const users = await userRepo.save([
+    { name: '海格教練', email: 'coach1@livefit.tw', role: 'COACH' },
+    { name: '小美教練', email: 'coach2@livefit.tw', role: 'COACH' },
+  ])
+
+
+  const courseRepo = dataSource.getRepository('Course')
+  await courseRepo.save([
+    {
+      name: '肌力入門班',
+      description: '從零開始的自由重量訓練，帶你認識三大項與正確發力方式。',
+      start_at: new Date('2026-09-01T19:00:00+08:00'),
+      end_at: new Date('2026-09-01T20:30:00+08:00'),
+      max_participants: 12,
+      user: users[0],
+      skill: skills[0],
+    },
+    {
+      name: '週末飛輪',
+      description: '搭配音樂節奏的間歇踩踏課程，一堂課燃燒滿滿卡路里。',
+      start_at: new Date('2026-09-05T10:00:00+08:00'),
+      end_at: new Date('2026-09-05T11:00:00+08:00'),
+      max_participants: 20,
+      user: users[1],
+      skill: skills[1],
+    },
+    {
+      name: '晨間瑜珈',
+      description: '以呼吸串連體式的舒緩流動，喚醒一整天的身體狀態。',
+      start_at: new Date('2026-09-08T07:00:00+08:00'),
+      end_at: new Date('2026-09-08T08:00:00+08:00'),
+      max_participants: 15,
+      user: users[0],
+      skill: skills[2],
+    },
+    {
+      name: '核心特訓',
+      description: '針對腹橫肌與下背的穩定訓練，改善姿勢並強化核心力量。',
+      start_at: new Date('2026-09-10T20:00:00+08:00'),
+      end_at: new Date('2026-09-10T21:00:00+08:00'),
+      max_participants: 10,
+      user: users[0],
+      skill: skills[0],
+    },
+  ])
 
   console.log('🌱 seed 完成')
   await dataSource.destroy()
